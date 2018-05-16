@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.xpath;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,6 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import br.univille.projdacs2018.controller.HomeController;
+import br.univille.projdacs2018.controller.PacienteController;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -26,17 +28,26 @@ public class Projdacs2018ApplicationTests {
 	private HomeController controller;
 
 	@Autowired
+	private PacienteController pacienteController;
+	
+	@Autowired
 	private MockMvc mockMvc;
 
 	@Test
 	public void contextLoads() {
 		assertThat(controller).isNotNull();
+		assertThat(pacienteController).isNotNull();
 	}
 
-	
 	@Test
 	public void homeControllerTest() throws Exception {
 		//Teste do método index
 		this.mockMvc.perform(get("/")).andDo(print()).andExpect(status().isOk()).andExpect(content().string(containsString("{\"name\":\"Stocker\"}")));
+	}
+	
+	@Test
+	public void pacienteControllerTest() throws Exception {
+		//Teste do método index
+		this.mockMvc.perform(get("/paciente")).andDo(print()).andExpect(status().isOk()).andExpect(xpath("//table").exists()).andExpect(xpath("//td[contains(., 'Zezinho')]").exists());
 	}
 }
